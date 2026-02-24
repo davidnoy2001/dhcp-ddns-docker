@@ -1,0 +1,109 @@
+{
+    "Dhcp4": {
+        "interfaces-config": {
+            "interfaces": [
+                "eth0"
+            ],
+            "dhcp-socket-type": "raw"
+        },
+        "valid-lifetime": 21600,
+        "renew-timer": 1000,
+        "rebind-timer": 2000,
+        "option-data": [
+            {
+                "name": "ntp-servers",
+                "data": "10.0.4.1"
+            },
+            {
+                "name": "domain-name-servers",
+                "data": "192.168.20.11"
+            }
+        ],
+        "dhcp-ddns": {
+            "enable-updates": true,
+            "server-ip": "127.0.0.1",
+            "server-port": 53001,
+            "sender-ip": "",
+            "sender-port": 0,
+            "max-queue-size": 1024,
+            "ncr-protocol": "UDP",
+            "ncr-format": "JSON"
+        },
+        "ddns-send-updates": true,
+        "ddns-override-no-update": false,
+        "ddns-override-client-update": false,
+        "ddns-replace-client-name": "never",
+        "ddns-generated-prefix": "myhost",
+        "ddns-qualifying-suffix": "",
+        "ddns-update-on-renew": false,
+        "ddns-conflict-resolution-mode": "check-with-dhcid",
+        "hostname-char-set": "",
+        "hostname-char-replacement": "",
+        "subnet4": [
+            {
+                "id": 1,
+                "pools": [
+                    {
+                        "pool": "192.168.20.100-192.168.20.200"
+                    }
+                ],
+                "subnet": "192.168.20.0/24",               
+                "valid-lifetime": 43200,
+                "option-data": [
+                    {
+                        "name": "domain-name",
+                        "data": "tia.david"
+                    },
+                    {
+                        "name": "routers",
+                        "data": "192.168.20.254"
+                    }
+                ],
+                "ddns-qualifying-suffix": "tia.david",
+                "reservations": [
+                    {
+                        "hw-address": "02:42:ac:11:00:10",
+                        "ip-address": "192.168.20.100",
+                        "option-data": [
+                            {
+                                "name": "routers",
+                                "data": "192.168.20.253"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "pools": [
+                    {
+                        "pool": "172.21.20.50 - 172.21.20.220"
+                    }
+                ],
+                "subnet": "172.21.20.0/24",
+                "option-data": [
+                    {
+                        "name": "domain-name",
+                        "data": "tia.david"
+                    },
+                    {
+                        "name": "routers",
+                        "data": "172.21.20.254"
+                    }
+                ],
+                "ddns-qualifying-suffix": "tia.david"
+            }
+        ],
+        "loggers": [
+            {
+                "name": "kea-dhcp4",
+                "output-options": [
+                    {
+                        "output": "/var/log/kea/david.log"
+                    }
+                ],
+                "severity": "WARN"
+            }
+        ]
+    }
+}

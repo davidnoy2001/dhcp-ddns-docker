@@ -1,0 +1,54 @@
+{
+    "DhcpDdns": {
+        "ip-address": "127.0.0.1",
+        "port": 53001,
+        "dns-server-timeout": 500,
+        "ncr-protocol": "UDP",
+        "ncr-format": "JSON",
+            "tsig-keys": [
+            {
+                "name": "cave-tia-david",
+                "algorithm": "hmac-sha256",
+                "secret": "TOdDSxea3cofsnprMVNiEHPT6aeP49gyATHjQ+qq5GY="
+            }
+        ],
+        "forward-ddns": {
+            "ddns-domains": [
+                {
+                    "name": "tia.david.",
+                    "key-name": "cave-tia-david",
+                    "dns-servers": [
+                        {
+                            "ip-address": "192.168.20.11",
+                            "port": 53
+                        }
+                    ]
+                }
+            ]
+        },
+        "reverse-ddns": {
+            "ddns-domains": [
+                {
+                    "name": "20.168.192.in-addr.arpa.",
+                    "key-name": "cave-tia-david",
+                    "dns-servers": [
+                        {
+                            "ip-address": "192.168.20.11",
+                            "port": 53
+                        }
+                    ]
+                },
+                {
+                    "name": "20.21.172.in-addr.arpa.",
+                    "key-name": "cave-tia-david",
+                    "dns-servers": [
+                        {
+                            "ip-address": "192.168.20.11",
+                            "port": 53
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

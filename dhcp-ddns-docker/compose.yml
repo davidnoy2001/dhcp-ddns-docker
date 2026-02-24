@@ -1,0 +1,126 @@
+services:
+  router:
+    build: ./docker/router
+    hostname: router
+    networks:
+      rede_wan:
+        ipv4_address: 192.0.2.254  
+        interface_name: eth0  
+      rede1:
+        ipv4_address: 192.168.20.254
+        interface_name: eth1
+      rede2:
+        ipv4_address: 172.21.20.254
+        interface_name: eth2
+    cap_add:
+      - NET_ADMIN
+  filemon:
+    build: docker/dnsserver
+    hostname: filemon
+    networks:
+      rede1:
+        ipv4_address: 192.168.20.11
+    cap_add:
+      - NET_ADMIN    
+    volumes:
+      - ./filemon/named.conf.local:/etc/bind/named.conf.local
+      - ./filemon/named.conf.options:/etc/bind/named.conf.options
+      - ./filemon/zonas:/var/cache/bind/zonas
+  mortadelo:
+    build: ./docker/kea
+    hostname: mortadelo
+    networks:
+      rede1:
+        ipv4_address: 192.168.20.10
+    cap_add:
+      - NET_ADMIN
+    entrypoint: "bash -c /sbin/entrypoint.sh"
+    volumes:
+      - ./mortadelo/entrypoint.sh:/sbin/entrypoint.sh
+      - ./mortadelo/dhcp4.jsonc:/etc/kea/kea-dhcp4.conf
+      - ./mortadelo/dhcp-ddns.jsonc:/etc/kea/kea-dhcp-ddns.conf
+      - ./mortadelo/dhcp/kea-leases4.csv:/var/lib/kea/kea-leases4.csv
+
+  
+  cliente1:
+    build: ./docker/cliente
+    hostname: client1
+    depends_on:
+      - mortadelo
+    networks:
+      rede1:
+        mac_address: 02:42:ac:11:00:10  # dirección HW fija
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
+  cliente2:
+    build: ./docker/cliente
+    hostname: cliente2
+    depends_on:
+      - mortadelo
+    networks:
+      rede1:
+        mac_address: 02:42:ac:11:00:11
+    cap_add:
+      - NET_ADMIN
+    command: > 
+      sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+  cliente3:
+    build: ./docker/cliente
+    hostname: cliente3
+    depends_on:
+      - mortadelo
+    networks:
+      rede1:
+        mac_address: 02:42:ac:11:00:12
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+  cliente4:
+    build: ./docker/cliente
+    hostname: cliente4
+    depends_on:
+      - mortadelo
+    networks:
+      rede2:
+        mac_address: 02:42:ac:11:00:13
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"  
+  cliente5:
+    build: ./docker/cliente
+    hostname: cliente5
+    depends_on:
+      - mortadelo
+      - cliente1
+      - cliente2
+      - cliente3
+      - cliente4      
+    networks:
+      rede2:
+        mac_address: 02:42:ac:11:00:14
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "sleep 10 && ip a flush dev eth0 && dhclient -v eth0 && sleep infinity"          
+networks:
+  rede1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24          
+  rede2:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.20.0/24 
+        
+  rede_wan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.0.2.0/24            

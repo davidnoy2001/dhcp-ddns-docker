@@ -1,0 +1,22 @@
+key "cave-tia-david" {
+        algorithm hmac-sha256;
+        secret "TOdDSxea3cofsnprMVNiEHPT6aeP49gyATHjQ+qq5GY=";
+};
+
+zone "tia.david" {
+	type primary;
+        file "zonas/db.tia.david";
+        allow-update { key "cave-tia-david"; };
+};
+
+zone "20.168.192.in-addr.arpa" {
+        type primary;
+        file "zonas/db.20.168.192";
+        allow-update { key "cave-tia-david"; };
+};
+
+zone "20.21.192.in-addr.arpa" {
+        type primary;
+        file "zonas/db.20.21.172";
+        allow-update { key "cave-tia-david"; };
+};
